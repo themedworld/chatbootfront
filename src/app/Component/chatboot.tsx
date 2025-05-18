@@ -1,5 +1,5 @@
-'use client';
-import 'bootstrap/dist/css/bootstrap.min.css';
+client';
+
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from './Chatbot.module.css';
@@ -42,15 +42,16 @@ const scrollToBottom = () => {
   setIsLoading(true);
 
   try {
-   const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
+  const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ message: userMessage.content }) // 🛠️ correction ici
 });
 
+
 if (!res.ok) {
   const text = await res.text(); // pour voir le HTML de l’erreur
-  throw new Error(`Erreur API: ${res.status} - ${text}`);
+  throw new Error(Erreur API: ${res.status} - ${text});
 }
 
 const data = await res.json();
@@ -59,7 +60,7 @@ if (data.recommandations && data.recommandations.length > 0) {
   const reply = [
     data.message,
     ...data.recommandations.map((hotel: Hotel) =>
-      `🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...`
+      🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...
     ),
     data.footer
   ].join('\n\n');
@@ -86,7 +87,7 @@ if (data.recommandations && data.recommandations.length > 0) {
 
 
   return (
-      <div className={styles.container}>
+    <div className={styles.container}>
       <Head>
         <title>LoisirBot</title>
         <meta name="description" content="Chatbot de recommandations de hotel" />
@@ -102,7 +103,7 @@ if (data.recommandations && data.recommandations.length > 0) {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={${styles.message} ${ styles.userMessage : styles.assistantMessage}}
+              className={${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}}
             >
               <div className={styles.messageContent}>
                 {message.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
@@ -133,6 +134,6 @@ if (data.recommandations && data.recommandations.length > 0) {
           <button type="submit" className={styles.submitButton} disabled={isLoading}>Envoyer</button>
         </form>
       </div>
-    </div> 
+    </div>
   );
 }
