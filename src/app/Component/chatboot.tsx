@@ -1,5 +1,5 @@
 'use client';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from './Chatbot.module.css';
@@ -42,10 +42,10 @@ const scrollToBottom = () => {
   setIsLoading(true);
 
   try {
-    const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
+   const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ message: userMessage })
+  body: JSON.stringify({ message: userMessage.content }) // 🛠️ correction ici
 });
 
 if (!res.ok) {
@@ -86,53 +86,59 @@ if (data.recommandations && data.recommandations.length > 0) {
 
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>LoisirBot</title>
-        <meta name="description" content="Chatbot de recommandations de hotel" />
-      </Head>
+   <div className={`${styles.container} container-fluid py-4`}>
+  <Head>
+    <title>LoisirBot</title>
+    <meta name="description" content="Chatbot de recommandations de hotel" />
+  </Head>
 
-      <header className={styles.header}>
-        <h1>🤖 Tuna✔️is</h1>
-        <p>Découvrez des suggestions d’hôtels faites pour vous !</p>
-      </header>
+  <header className={`${styles.header} text-center mb-4`}>
+    <h1 className="fw-bold">🤖 Tuna✔️is</h1>
+    <p className="lead">Découvrez des suggestions d’hôtels faites pour vous !</p>
+  </header>
 
-      <div className={styles.chatContainer}>
-        <div className={styles.messages}>
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}`}
-            >
-              <div className={styles.messageContent}>
-                {message.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
+  <div className={`${styles.chatContainer} row justify-content-center`}>
+    <div className="col-12 col-md-10 col-lg-8">
+      <div className={`${styles.messages} mb-3`}>
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage} mb-2`}
+          >
+            <div className={`${styles.messageContent} p-2 rounded bg-light`}>
+              {message.content.split('\n').map((line, i) => <p key={i} className="mb-1">{line}</p>)}
+            </div>
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className={`${styles.message} ${styles.assistantMessage} mb-2`}>
+            <div className={styles.messageContent}>
+              <div className={styles.typingIndicator}>
+                <span></span><span></span><span></span>
               </div>
             </div>
-          ))}
-          {isLoading && (
-            <div className={`${styles.message} ${styles.assistantMessage}`}>
-              <div className={styles.messageContent}>
-                <div className={styles.typingIndicator}>
-                  <span></span><span></span><span></span>
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        <form onSubmit={handleSubmit} className={styles.inputForm}>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder={ "Parle-moi de tes envies de sorties..."}
-            className={styles.inputField}
-            disabled={isLoading}
-          />
-          <button type="submit" className={styles.submitButton} disabled={isLoading}>Envoyer</button>
-        </form>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
+
+      <form onSubmit={handleSubmit} className={`${styles.inputForm} input-group`}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Parle-moi de tes envies de sorties..."
+          className={`form-control ${styles.inputField}`}
+          disabled={isLoading}
+        />
+        <button type="submit" className={`btn btn-primary ${styles.submitButton}`} disabled={isLoading}>
+          Envoyer
+        </button>
+      </form>
     </div>
+  </div>
+</div>
+
   );
 }
