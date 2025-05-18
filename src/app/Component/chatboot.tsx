@@ -136,4 +136,5 @@ if (data.recommandations && data.recommandations.length > 0) {
       </div>
     </div>
   );
-}
+};
+
