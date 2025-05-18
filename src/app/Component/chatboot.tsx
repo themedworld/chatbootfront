@@ -1,15 +1,15 @@
-'client';
+'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from './Chatbot.module.css';
+
 interface Hotel {
   hotel: string;
   rating: number;
   address: string;
   description: string;
 }
-
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([
@@ -18,73 +18,67 @@ export default function ChatbotPage() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-const scrollToBottom = () => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-};
-
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
- const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (!inputValue.trim()) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputValue.trim()) return;
 
-  const messageContent = inputValue.trim();
-  const userMessage = { role: 'user', content: messageContent };
-  setMessages((prev) => [...prev, userMessage]);
-  setInputValue('');
-  setIsLoading(true);
+    const messageContent = inputValue.trim();
+    const userMessage = { role: 'user', content: messageContent };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
 
-  try {
-  const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ message: userMessage.content }) // 🛠️ correction ici
-});
+    try {
+      const res = await fetch("https://backendhotelrec.onrender.com/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage.content })
+      });
 
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Erreur API: ${res.status} - ${text}`);
+      }
 
-if (!res.ok) {
-  const text = await res.text(); // pour voir le HTML de l’erreur
- throw new Error(`Erreur API: ${res.status} - ${text}`);
-}
+      const data = await res.json();
 
-const data = await res.json();
+      if (data.recommandations && data.recommandations.length > 0) {
+        const reply = [
+          data.message,
+          ...data.recommandations.map((hotel: Hotel) =>
+            `🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...`
+          ),
+          data.footer
+        ].join('\n\n');
+        setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+      } else {
+        setMessages((prev) => [...prev, {
+          role: 'assistant',
+          content: data.message || "😕 Aucune recommandation trouvée."
+        }]);
+      }
 
-if (data.recommandations && data.recommandations.length > 0) {
- const reply = [
-  data.message,
-  ...data.recommandations.map((hotel: Hotel) =>
-    `🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...`
-  ),
-  data.footer
-].join('\n\n');
-  setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
-
-
-} else {
-  setMessages((prev) => [...prev, {
-    role: 'assistant',
-    content: data.message || "😕 Aucune recommandation trouvée."
-  }]);
-}
-
-  } catch (error) {
-    console.error("Erreur:", error);
-    setMessages((prev) => [...prev, {
-      role: 'assistant',
-      content: "❌ Une erreur est survenue côté serveur."
-    }]);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+    } catch (error) {
+      console.error("Erreur:", error);
+      setMessages((prev) => [...prev, {
+        role: 'assistant',
+        content: "❌ Une erreur est survenue côté serveur."
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -136,5 +130,5 @@ if (data.recommandations && data.recommandations.length > 0) {
       </div>
     </div>
   );
-};
+}
 
