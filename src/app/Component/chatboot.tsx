@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
-/src/styles/Chatbot.module.css
+import styles from '/src/styles/Chatbot.module.css';
 
 
 export default function ChatbotPage() {
