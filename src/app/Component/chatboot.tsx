@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
-import styles from '../styles/Chatbot.module.css';
+import styles from '../../styles/Chatbot.module.css';
+
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([
