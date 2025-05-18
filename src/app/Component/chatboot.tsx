@@ -86,7 +86,7 @@ if (data.recommandations && data.recommandations.length > 0) {
 
 
   return (
-     <div className={styles.container}>
+      <div className={styles.container}>
       <Head>
         <title>LoisirBot</title>
         <meta name="description" content="Chatbot de recommandations de hotel" />
@@ -102,7 +102,7 @@ if (data.recommandations && data.recommandations.length > 0) {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}}
+              className={${styles.message} ${ styles.userMessage : styles.assistantMessage}}
             >
               <div className={styles.messageContent}>
                 {message.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
