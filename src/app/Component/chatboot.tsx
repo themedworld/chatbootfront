@@ -103,7 +103,7 @@ if (data.recommandations && data.recommandations.length > 0) {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}}
+              className={`${styles.message} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}`}
             >
               <div className={styles.messageContent}>
                 {message.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
@@ -111,7 +111,7 @@ if (data.recommandations && data.recommandations.length > 0) {
             </div>
           ))}
           {isLoading && (
-            <div className={${styles.message} ${styles.assistantMessage}}>
+            <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
                 <div className={styles.typingIndicator}>
                   <span></span><span></span><span></span>
@@ -127,7 +127,7 @@ if (data.recommandations && data.recommandations.length > 0) {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={ "Parle-moi de tes envies de sorties..."}
+            placeholder={"Parle-moi de tes envies de sorties..."}
             className={styles.inputField}
             disabled={isLoading}
           />
