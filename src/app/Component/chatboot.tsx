@@ -11,7 +11,7 @@ export default function ChatbotPage() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [userId, setUserId] = useState(null);
+
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
