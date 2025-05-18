@@ -57,13 +57,13 @@ if (!res.ok) {
 const data = await res.json();
 
 if (data.recommandations && data.recommandations.length > 0) {
-  const reply = [
-    data.message,
-    ...data.recommandations.map((hotel: Hotel) =>
-      🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...
-    ),
-    data.footer
-  ].join('\n\n');
+ const reply = [
+  data.message,
+  ...data.recommandations.map((hotel: Hotel) =>
+    `🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...`
+  ),
+  data.footer
+].join('\n\n');
   setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
 
 
