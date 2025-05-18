@@ -51,7 +51,7 @@ const scrollToBottom = () => {
 
 if (!res.ok) {
   const text = await res.text(); // pour voir le HTML de l’erreur
-  throw new Error(Erreur API: ${res.status} - ${text});
+ throw new Error(`Erreur API: ${res.status} - ${text}`);
 }
 
 const data = await res.json();
