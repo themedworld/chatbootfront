@@ -1,4 +1,4 @@
-import Chatbot from './Component/chatboot.tsx';
+import Chatbot from './Component/chatboot';
 
 
 export default function Home() {
