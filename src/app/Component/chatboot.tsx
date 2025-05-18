@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from './Chatbot.module.css';
+interface Hotel {
+  hotel: string;
+  rating: number;
+  address: string;
+  description: string;
+}
 
 
 export default function ChatbotPage() {
@@ -13,16 +19,19 @@ export default function ChatbotPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const messagesEndRef = useRef(null);
+const messagesEndRef = useRef<HTMLDivElement | null>(null);
+const scrollToBottom = () => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
- const handleSubmit = async (e) => {
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   if (!inputValue.trim()) return;
 
@@ -46,16 +55,17 @@ if (!res.ok) {
 
 const data = await res.json();
 
-
 if (data.recommandations && data.recommandations.length > 0) {
   const reply = [
     data.message,
-    ...data.recommandations.map((hotel) =>
+    ...data.recommandations.map((hotel: Hotel) =>
       `🏨 ${hotel.hotel} — ⭐ ${hotel.rating}/50 à ${hotel.address}\n📝 ${hotel.description.slice(0, 150)}...`
     ),
     data.footer
   ].join('\n\n');
   setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+
+
 } else {
   setMessages((prev) => [...prev, {
     role: 'assistant',
