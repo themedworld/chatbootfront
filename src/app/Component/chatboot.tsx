@@ -18,8 +18,8 @@ export default function ChatbotPage() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const messagesEndRef = useRef(null);
-const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 const scrollToBottom = () => {
   if (messagesEndRef.current) {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
